@@ -1,0 +1,143 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/prefs_main_template/macros/master">
+      
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)" />
+
+<body>
+
+<div metal:fill-slot="prefs_configlet_main" i18n:domain="plone"
+        tal:define="QI python:context.portal_url.getPortalObject().portal_quickinstaller;
+                    IH QI/getInstanceHome;
+                    usingBO python:(IH.find('/parts/') &gt; 0) or (IH.find('\\parts\\') &gt; 0)">
+                        
+    <script type="text/javascript"
+            src="referencebrowser.js">
+    </script>
+
+    <!--
+    <script language='javascript'>
+    function HideAll(mostrar){
+    //document.getElementById('streaming').style.display='none';
+    //document.getElementById(mostrar).style.display='';
+    }
+    </script>  
+    -->
+    
+    
+    <h1 class="documentFirstHeading">
+    <img tal:attributes="src string:${context/portal_url}/tool.gif"/>
+        Configurações do LiberiunStreaming
+    </h1>
+
+    <a href=""
+       class="link-parent"
+       tal:attributes="href string:$portal_url/plone_control_panel"
+       i18n:translate="label_up_to_plone_setup">
+    Voltar para as configurações do site
+    </a>
+    
+    <!--
+    <div>
+        <ul class="formTabs" style="text-align:left;">
+            <li class="formTab firstFormTab">
+                <a id="fieldsetlegend-newsletter" 
+                   href="#fieldsetlegend-newsletter"  
+                   style="border-left:1px solid #8CACBB;
+                          border-right:1px solid #8CACBB;"
+                   onclick="javascript:HideAll('newsletter');"><span>Configurações de Streaming</span></a>
+            </li>       
+        </ul>
+    </div>
+    -->
+    
+    <br />
+    <br />
+        
+    <div class="documentDescription">
+        Esta é a área de configuração do produto de Streaming.
+    </div>
+    
+
+    <form style="float: left;"
+          action="liberiunstreaming_tool_action" 
+          enctype="multipart/form-data"
+          method="post"
+          id="newsletter"
+          class="fields">
+
+        <fieldset>
+            <legend>Configuração do sistema de Streaming</legend>
+
+             <div class="field ">
+             
+                  <label class="formQuestion">Url do servidor de streaming</label>
+                  <div class="formHelp">
+                      Informe url do servidor de streaming (lighttpd).
+                  </div>
+                  
+                  <div>
+                       <input type="text" 
+                              id="streaming_server_url" 
+                              name="streaming_server_url" size="53" 
+                              value="#"
+                              tal:attributes="value context/portal_liberiunstreamingtool/getStreaming_server_url"/>
+                  </div>
+            </div> 
+
+            <div class="field ">
+             
+                  <label class="formQuestion">Caminho dos arquivos no servidor</label>
+                  <div class="formHelp">
+                      Informe o caminho (filesystem) de onde os arquivos serão
+                      servidos no servidor lighttpd. É necessário
+                      informar uma barra "/" no final da url. Ex:
+                      /home/videos/.
+                  </div>
+                  
+                  <div>
+                       <input type="text" 
+                              id="streaming_files_path" 
+                              name="streaming_files_path" size="53" 
+                              value="#"
+                              tal:attributes="value context/portal_liberiunstreamingtool/getStreaming_files_path"/>
+                  </div>
+            </div>
+            
+            <div class="field">
+                <label>Download dos Vídeos</label>
+
+                <div class="formHelp">
+                Define se os vídeos poderão ser baixados
+                </div>
+
+               <input type="checkbox"
+                      name="download_video"
+                      id="download_video"
+                      class="noborder"
+                      tabindex=""
+                      tal:attributes="tabindex tabindex/next;
+                                      checked context/portal_liberiunstreamingtool/getDownload_video"/>
+          </div> 
+
+            <input class="context"
+                   type="submit"
+                   i18n:attributes="value label_save;"
+                   value="Save"
+                   />
+                   
+        </fieldset>
+    </form>
+    
+    <div class="visualClear" id="clear-space-after-broken"><!-- --></div>
+    
+</div>
+
+</body>
+</html>
