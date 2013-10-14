@@ -9,7 +9,7 @@ from zope.interface import implements
 
 from Products.CMFDynamicViewFTI.browserdefault import BrowserDefaultMixin
 
-from vindula.streaming.config import PROJECTNAME
+from vindula.streaming.config import PROJECTNAME, PATH_FILE
 from vindula.streaming.content.interfaces import IVindulaStreaming
 
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
@@ -100,17 +100,17 @@ atapi.registerType(VindulaStreaming, PROJECTNAME)
 
 def converte_video(objeto):
 
-    if objeto.getVideo().filename.endswith('.mp3'):
-        return
-
     video = str(objeto.getVideo())
 
     uid = objeto.UID()
 
-    filename = uid + "_video"
+    filename = PATH_FILE + uid + "_video"
     arquivo = open(filename, 'w')
     arquivo.write(video)
     arquivo.close()
+
+    if objeto.getVideo().filename.endswith('.mp3'):
+        return
 
     new = filename + ".flv"
     # Caso exista algum flv, apaga porque vamos gera-lo novamente
