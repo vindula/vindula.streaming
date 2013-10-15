@@ -3,14 +3,18 @@
 from five import grok
 from Products.Archetypes.interfaces import IObjectEditedEvent, IObjectInitializedEvent
 
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
+
 from AccessControl import ClassSecurityInfo
 from Products.Archetypes import atapi
 from zope.interface import implements
 
 from Products.CMFDynamicViewFTI.browserdefault import BrowserDefaultMixin
 
-from vindula.streaming.config import PROJECTNAME, PATH_FILE
+from vindula.streaming.config import PROJECTNAME
 from vindula.streaming.content.interfaces import IVindulaStreaming
+from vindula.streaming.controlpanel import IStreamingSettings
 
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 
@@ -104,7 +108,12 @@ def converte_video(objeto):
 
     uid = objeto.UID()
 
-    filename = PATH_FILE + uid + "_video"
+    registry =  getUtility(IRegistry)
+    settings = registry.forInterface(IStreamingSettings)
+
+    path = settings.path
+
+    filename = path + uid + "_video"
     arquivo = open(filename, 'w')
     arquivo.write(video)
     arquivo.close()
@@ -118,17 +127,20 @@ def converte_video(objeto):
         os.unlink(new)
 
     # Converte o video e seta o audio para o rate 44100
-    command = ["ffmpeg", "-y", "-i", filename, "-ar", "44100", new]
+    command = ["avconv", "-y", "-i", filename, "-ar", "44100", new]
     #result = Popen(command,stdout=PIPE, stderr=PIPE).communicate()
     Popen(command)
-    # fecha e apaga o arquivo
-    os.unlink(filename)
+    # apaga o arquivo
+    if os.path.isfile(new):
+        os.unlink(filename)
 
     #return None
+
 
 @grok.subscribe(VindulaStreaming, IObjectEditedEvent)
 def streaming_editado(context, event):
     converte_video(context)
+
 
 @grok.subscribe(VindulaStreaming, IObjectInitializedEvent)
 def streaming_adicionado(context, event):

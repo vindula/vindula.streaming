@@ -13,6 +13,8 @@
 
   <include package="five.grok" />
 
+  <include package=".controlpanel" />
+
   <grok:grok package="." />
 
   <genericsetup:registerProfile

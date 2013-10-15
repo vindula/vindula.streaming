@@ -9,14 +9,12 @@
  <property name="content_meta_type">VindulaStreaming</property>
  <property name="product">vindula.streaming</property>
  <property name="factory">addVindulaStreaming</property>
- <property name="immediate_view">video_view</property>
+ <property name="immediate_view">view</property>
  <property name="global_allow">True</property>
  <property name="filter_content_types">False</property>
  <property name="allow_discussion">False</property>
- <property name="default_view">video_view</property>
+ <property name="default_view">view</property>
  <property name="view_methods">
-  <element value="base_view"/>
-  <element value="video_view"/>
  </property>
  <property name="default_view_fallback">False</property>
  <alias from="(Default)" to="(dynamic view)"/>
@@ -28,7 +26,7 @@
          action_id="view"
          category="object" 
          condition_expr=""
-         url_expr="string:${object_url}/video_view" 
+         url_expr="string:${object_url}/view"
          visible="True">
   <permission value="View"/>
  </action>

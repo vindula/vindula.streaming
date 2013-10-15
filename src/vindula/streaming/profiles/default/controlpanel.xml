@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<object name="portal_controlpanel"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="vindula.streaming"
+    purge="False">
+
+  <configlet
+      title="Vindula Streaming"
+      action_id="vindulastreaming"
+      appId="vindula.streaming"
+      category="Products"
+      condition_expr=""
+      url_expr="string:${portal_url}/@@streaming-settings"
+      visible="True"
+      i18n:attributes="title">
+    <permission>Manage portal</permission>
+  </configlet>
+
+</object>
