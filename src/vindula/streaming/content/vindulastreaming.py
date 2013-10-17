@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from five import grok
-from Products.Archetypes.interfaces import IObjectEditedEvent, IObjectInitializedEvent
-
-from zope.component import getUtility
-from plone.registry.interfaces import IRegistry
-
 from AccessControl import ClassSecurityInfo
 from Products.Archetypes import atapi
 from zope.interface import implements
@@ -14,12 +8,8 @@ from Products.CMFDynamicViewFTI.browserdefault import BrowserDefaultMixin
 
 from vindula.streaming.config import PROJECTNAME
 from vindula.streaming.content.interfaces import IVindulaStreaming
-from vindula.streaming.controlpanel import IStreamingSettings
 
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
-
-from subprocess import Popen, PIPE
-import os
 
 StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
     atapi.StringField(
@@ -27,9 +17,6 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         widget=atapi.StringField._properties['widget'](
             label="Tempo de Duração",
             description="Imforme o tempo de duração desta multimídia",
-            label_msgid='LiberiunStreaming_label_duracao',
-            description_msgid='LiberiunStreaming_help_duracao',
-            i18n_domain='LiberiunStreaming',
         ),
         required=True,
     ),
@@ -48,9 +35,6 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         widget=atapi.StringField._properties['widget'](
             label="Diretor",
             description="Se for um vídeo informe o diretor",
-            label_msgid='LiberiunStreaming_label_diretor',
-            description_msgid='LiberiunStreaming_help_diretor',
-            i18n_domain='LiberiunStreaming',
         ),
         required=False,
     ),
@@ -61,18 +45,22 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         primary=True,
         widget=atapi.FileWidget(
             label='Arquivo Multimidia',
-            label_msgid='LiberiunStreaming_label_video',
-            i18n_domain='LiberiunStreaming',
         ),
     ),
 
     atapi.ImageField(
-        name='foto_video.jpg',
+        name='image',
         widget=atapi.ImageWidget(
             label='Foto do Video',
         ),
-        sizes = {'destaque.jpg' : (263,197), 'arquivo.jpg' : (131,88), 'home_box.jpg': (100,75)},
-        storage=atapi.AttributeStorage(),
+        sizes= {'large'   : (768, 768),
+                'preview' : (400, 400),
+                'mini'    : (200, 200),
+                'thumb'   : (128, 128),
+                'tile'    :  (64, 64),
+                'icon'    :  (32, 32),
+                'listing' :  (16, 16),
+                },
     ),
 ),)
 
@@ -91,9 +79,6 @@ class VindulaStreaming(atapi.BaseContent, BrowserDefaultMixin):
 
     schema = StreamingSchema
 
-#    def at_post_create_script(self):
-#        self.converte_video()
-
     def is_music(self):
         return self.getVideo().filename.endswith('.mp3')
 
@@ -101,47 +86,3 @@ class VindulaStreaming(atapi.BaseContent, BrowserDefaultMixin):
         return not self.is_music()
 
 atapi.registerType(VindulaStreaming, PROJECTNAME)
-
-def converte_video(objeto):
-
-    video = str(objeto.getVideo())
-
-    uid = objeto.UID()
-
-    registry =  getUtility(IRegistry)
-    settings = registry.forInterface(IStreamingSettings)
-
-    path = settings.path
-
-    filename = path + uid + "_video"
-    arquivo = open(filename, 'w')
-    arquivo.write(video)
-    arquivo.close()
-
-    if objeto.getVideo().filename.endswith('.mp3'):
-        return
-
-    new = filename + ".flv"
-    # Caso exista algum flv, apaga porque vamos gera-lo novamente
-    if os.path.isfile(new):
-        os.unlink(new)
-
-    # Converte o video e seta o audio para o rate 44100
-    command = ["avconv", "-y", "-i", filename, "-ar", "44100", new]
-    #result = Popen(command,stdout=PIPE, stderr=PIPE).communicate()
-    Popen(command)
-    # apaga o arquivo
-    if os.path.isfile(new):
-        os.unlink(filename)
-
-    #return None
-
-
-@grok.subscribe(VindulaStreaming, IObjectEditedEvent)
-def streaming_editado(context, event):
-    converte_video(context)
-
-
-@grok.subscribe(VindulaStreaming, IObjectInitializedEvent)
-def streaming_adicionado(context, event):
-    converte_video(context)

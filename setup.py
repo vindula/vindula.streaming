@@ -40,7 +40,9 @@ setup(name='vindula.streaming',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'hachoir-metadata',
+          'hachoir-core',
+          'hachoir-parser'
       ],
       extras_require={'test': ['plone.app.testing']},
       entry_points="""
