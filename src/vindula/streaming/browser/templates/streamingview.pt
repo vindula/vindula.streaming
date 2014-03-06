@@ -36,7 +36,7 @@
         <div class="video" tal:condition='context/is_video'>
             <a href=""
                tal:attributes='href string:${view/server_url}/${uid}_video.flv'
-               style="display:block;width:300px;height:300px"
+               style="display:block;width:640px;height:390px"
                id="player">
 
             </a>
