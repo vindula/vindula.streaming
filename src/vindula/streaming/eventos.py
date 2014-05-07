@@ -38,7 +38,6 @@ def converte_video(objeto):
 
     if objeto.getVideo().filename.endswith('.mp3'):
         return
-
     new = filename + ".flv"
     # Caso exista algum flv, apaga porque vamos gera-lo novamente
     if os.path.isfile(new):

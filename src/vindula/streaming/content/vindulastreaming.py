@@ -62,6 +62,18 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
                 'listing' :  (16, 16),
                 },
     ),
+                                                             
+    atapi.LinesField(
+        'themesNews',
+        multiValued=1,
+        accessor="ThemeNews",
+        searchable=True,
+        schemata='categorization',
+        widget=atapi.KeywordWidget(
+            label=_(u'Temas'),
+            description=_(u'Selecione os temas.'),
+        ),
+    ), 
 ),)
 
 StreamingSchema['description'].schemata='default'

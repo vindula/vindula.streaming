@@ -12,7 +12,7 @@ Utilizamos as seguintes tecnologias:
     - Plone 4.3
     - Zope3 views
     - Servidor web Nginx
-    - Programa avconv para fazer a conversao do video para flv
+    - Programa avconv para fazer a conversao do video para flv (apt-get install libav-tools)
 
 Ao instalar o produto vindula.streaming, é necessário configurar o painel
 de controle do produto informando qual o endereço web que irá servir o
