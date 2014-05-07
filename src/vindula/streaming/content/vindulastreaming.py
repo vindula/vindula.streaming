@@ -70,10 +70,11 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         searchable=True,
         schemata='categorization',
         widget=atapi.KeywordWidget(
-            label=_(u'Temas'),
-            description=_(u'Selecione os temas.'),
+            label='Temas',
+            description='Selecione os temas.',
         ),
-    ), 
+    ),
+                                                             
 ),)
 
 StreamingSchema['description'].schemata='default'
