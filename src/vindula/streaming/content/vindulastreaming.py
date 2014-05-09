@@ -11,6 +11,8 @@ from vindula.streaming.content.interfaces import IVindulaStreaming
 
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 
+from vindula.content.models.content_field import ContentField
+
 StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
     atapi.StringField(
         name='duracao',
@@ -75,6 +77,17 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         ),
     ),
                                                              
+    atapi.StringField(
+        name='tipo',
+        searchable = True,
+        widget = atapi.SelectionWidget(
+            label="Tipologia",
+            description="Selecione a tipologia do vídeo.",
+            format = 'select', 
+        ),
+        vocabulary='get_tipo',
+    ),  
+                                                             
 ),)
 
 StreamingSchema['description'].schemata='default'
@@ -97,5 +110,13 @@ class VindulaStreaming(atapi.BaseContent, BrowserDefaultMixin):
 
     def is_video(self):
         return not self.is_music()
+    
+    def get_tipo(self):
+        content_fields = ContentField().get_content_file_by_type(u'tipo')
+        L = [('', '-- Selecione --')]
+        for item in content_fields:
+            L.append((item,item))
+            
+        return atapi.DisplayList(tuple(L))
 
 atapi.registerType(VindulaStreaming, PROJECTNAME)
