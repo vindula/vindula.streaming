@@ -12,15 +12,10 @@
     </metal:js>
 </head>
 <body>
-<metal:block fill-slot="content-description">
-    <!-- Remoção da macro description padrão do plone-->
-    <span> </span>
-</metal:block>
-<metal:main fill-slot="main">
+<metal:main fill-slot="content-core">
+    
     <div tal:define='uid python: context.UID;
                      caminho_contexto context/absolute_url;'>
-        <div id="viewlet-below-content-title" tal:content="structure provider:plone.belowcontenttitle" tal:condition="not:ajax_load" />
-        <div id="viewlet-above-content-body" tal:content="structure provider:plone.abovecontentbody" tal:condition="not:ajax_load" />
 
         <div class="music" tal:condition='context/is_music'>
             <object type="application/x-shockwave-flash" data="player.swf" tal:attributes='data: string:${context/absolute_url}/player.swf' id="audioplayer1" height="24" width="290">
@@ -57,9 +52,9 @@
         <div tal:condition="view/can_download|nothing">
             <br />
             <img src="#" title="#" alt="#"
-                 tal:attributes="src  string:${context/portal_url}/vindulastreaming.png;
-                                         alt   context/Description;
-                                         title context/Description" />
+                 tal:attributes="src string:${context/portal_url}/vindulastreaming.png;
+                                 alt   context/Description;
+                                 title context/Description" />
 
             <a href="#" alt="Download" title="Download"
                tal:attributes="href string:${context/absolute_url}/at_download/video">
