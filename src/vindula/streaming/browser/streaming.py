@@ -21,7 +21,13 @@ class StreamingView(grok.View):
         self.settings = self.registry.forInterface(IStreamingSettings)
 
     def server_url(self):
+        if not getattr(self, 'settings', False):
+            self.update()
+            
         return self.settings.url
 
     def can_download(self):
+        if not getattr(self, 'settings', False):
+            self.update()
+            
         return self.settings.download
