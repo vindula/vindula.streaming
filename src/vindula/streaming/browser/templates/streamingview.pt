@@ -11,58 +11,75 @@
         <script language="JavaScript" src="audio-player.js" tal:condition='context/is_music'></script>
     </metal:js>
 </head>
+
+
 <body>
-<metal:main fill-slot="content-core">
-    
-    <div tal:define='uid python: context.UID;
-                     caminho_contexto context/absolute_url;'>
+  <metal:main fill-slot="content-core">
 
-        <div class="music" tal:condition='context/is_music'>
-            <object type="application/x-shockwave-flash" data="player.swf" tal:attributes='data: string:${context/absolute_url}/player.swf' id="audioplayer1" height="24" width="290">
-                <param name="movie" value="player.swf" tal:attributes='data string:${context/absolute_url}/player.swf'>
-                <param name="FlashVars" value="playerID=audioplayer1&soundFile=http://www.fakedomain.com/myname/audio/music.mp3"
-                       tal:attributes='value string:playerID=audioplayer1&loop=no&autostart=no&slider=0x666666&track=0xffffff&border=0x666666&loader=0x9fffb8&soundFile=${view/server_url}/${uid}_video'>
-                <param name="quality" value="high">
-                <param name="menu" value="false">
-                <param name="wmode" value="transparent">
-            </object>
-        </div>
+      <tal:cont condition="view/check_share|nothing">
+            <tal:cont condition="context/activ_share|nothing">
+                <br/>
+                <div class="clear">
+                    <div class="opcao1">
+                      <span class="label-share">Compartilhar</span>
+                      <div class="vd-social-left"
+                          tal:define="change_id change_id|nothing">
+                          <div metal:use-macro="context/macro-comboStandard-content/macros/view"></div>
+                      </div>
+                  </div>
+              </div>
+          </tal:cont>
+      </tal:cont>
+      
+      <div tal:define='uid python: context.UID;
+                       caminho_contexto context/absolute_url;'>
 
-        <div class="video" tal:condition='context/is_video'>
-            <a href=""
-               tal:attributes='href string:${view/server_url}/${uid}_video.flv'
-               style="display:block;width:640px;height:390px"
-               id="player">
+          <div class="music" tal:condition='context/is_music'>
+              <object type="application/x-shockwave-flash" data="player.swf" tal:attributes='data: string:${context/absolute_url}/player.swf' id="audioplayer1" height="24" width="290">
+                  <param name="movie" value="player.swf" tal:attributes='data string:${context/absolute_url}/player.swf'>
+                  <param name="FlashVars" value="playerID=audioplayer1&soundFile=http://www.fakedomain.com/myname/audio/music.mp3"
+                         tal:attributes='value string:playerID=audioplayer1&loop=no&autostart=no&slider=0x666666&track=0xffffff&border=0x666666&loader=0x9fffb8&soundFile=${view/server_url}/${uid}_video'>
+                  <param name="quality" value="high">
+                  <param name="menu" value="false">
+                  <param name="wmode" value="transparent">
+              </object>
+          </div>
 
-            </a>
-            <!-- this will install flowplayer inside previous A- tag. -->
-            <script>
-                flowplayer("player", "flowplayer-3.1.2.swf", {
-                    clip: {
-                        autoPlay: false,
-                        autoBuffering: false,
-                        showMenu: false,
-                        autoRewind: true,
-                        loop: false
-                    }
-                });
-            </script>
-        </div>
+          <div class="video" tal:condition='context/is_video'>
+              <a href=""
+                 tal:attributes='href string:${view/server_url}/${uid}_video.flv'
+                 style="display:block;width:640px;height:390px"
+                 id="player">
 
-        <div tal:condition="view/can_download|nothing">
-            <br />
-            <img src="#" title="#" alt="#"
-                 tal:attributes="src string:${context/portal_url}/vindulastreaming.png;
-                                 alt   context/Description;
-                                 title context/Description" />
+              </a>
+              <!-- this will install flowplayer inside previous A- tag. -->
+              <script>
+                  flowplayer("player", "flowplayer-3.1.2.swf", {
+                      clip: {
+                          autoPlay: false,
+                          autoBuffering: false,
+                          showMenu: false,
+                          autoRewind: true,
+                          loop: false
+                      }
+                  });
+              </script>
+          </div>
 
-            <a href="#" alt="Download" title="Download"
-               tal:attributes="href string:${context/absolute_url}/at_download/video">
-                Download
-            </a>
-        </div>
+          <div tal:condition="view/can_download|nothing">
+              <br />
+              <img src="#" title="#" alt="#"
+                   tal:attributes="src string:${context/portal_url}/vindulastreaming.png;
+                                   alt   context/Description;
+                                   title context/Description" />
 
-    </div>
-</metal:main>
+              <a href="#" alt="Download" title="Download"
+                 tal:attributes="href string:${context/absolute_url}/at_download/video">
+                  Download
+              </a>
+          </div>
+
+      </div>
+  </metal:main>
 </body>
 </html>

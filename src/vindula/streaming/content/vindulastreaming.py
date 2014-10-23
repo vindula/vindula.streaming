@@ -14,6 +14,7 @@ from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from vindula.content.models.content_field import ContentField
 
 StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
+    
     atapi.StringField(
         name='duracao',
         widget=atapi.StringField._properties['widget'](
@@ -86,7 +87,18 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
             format = 'select', 
         ),
         vocabulary='get_tipo',
-    ),  
+    ), 
+
+    atapi.BooleanField(
+        name='activ_share',
+        default=True,
+        widget=atapi.BooleanWidget(
+            label="Ativar barra social",
+            description='Caso selecionado, ativa a barra social.',
+        ),
+        required=False,
+        schemata='settings',
+    ), 
                                                              
 ),)
 

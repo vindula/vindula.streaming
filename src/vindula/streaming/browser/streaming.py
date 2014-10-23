@@ -31,3 +31,9 @@ class StreamingView(grok.View):
             self.update()
             
         return self.settings.download
+
+    def check_share(self):
+        panel = self.context.restrictedTraverse('@@myvindula-conf-userpanel')
+        if panel:
+            return panel.check_share()
+

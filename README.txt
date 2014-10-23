@@ -17,7 +17,7 @@ Utilizamos as seguintes tecnologias:
 Ao instalar o produto vindula.streaming, é necessário configurar o painel
 de controle do produto informando qual o endereço web que irá servir o
 arquivo do streaming e o path do servidor onde serão armazenados os arquivos
-após a conversão.
+após a conversão. (meu.portal.com/@@streaming-settings)
 
 É importante que o Nginx tenha sido compilado com o módulo flv. Para habilitar
 esta opção no momento da compilação, adicione a opção:
