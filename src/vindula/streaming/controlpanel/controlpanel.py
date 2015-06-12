@@ -31,6 +31,11 @@ class IStreamingSettings(Interface):
         default=True
     )
 
+    # async_quota_size = schema.Int(
+    #     title=u"Async Quota Size",
+    #     description=u"Number of conversions to run at a time.",
+    #     required=False,
+    # )
 
 class StreamingSettingsEditForm(controlpanel.RegistryEditForm):
 

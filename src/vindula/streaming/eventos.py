@@ -1,23 +1,19 @@
 # -*- coding: utf-8 -*-
-
-import os
 import cStringIO
-from PIL import Image
+import os
 from subprocess import Popen, PIPE
 
+from PIL import Image
+from Products.Archetypes.interfaces import IObjectEditedEvent, IObjectInitializedEvent
+from five import grok
 from hachoir_metadata.metadata import extractMetadata
 from hachoir_parser.guess import createParser
-from hachoir_core.error import HachoirError
-from hachoir_core.stream import InputStreamError
-
-from five import grok
-from Products.Archetypes.interfaces import IObjectEditedEvent, IObjectInitializedEvent
-
-from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
+from zope.component import getUtility
 
-from vindula.streaming.controlpanel import IStreamingSettings
+from vindula.streaming.async import queueJob
 from vindula.streaming.content.vindulastreaming import VindulaStreaming
+from vindula.streaming.controlpanel import IStreamingSettings
 
 
 def converte_video(objeto):
@@ -135,9 +131,11 @@ def pega_imagem(objeto):
 
 @grok.subscribe(VindulaStreaming, IObjectEditedEvent)
 def streaming_editado(context, event):
-    converte_video(context)
+    queueJob(context)
+    # converte_video(context)
 
 
 @grok.subscribe(VindulaStreaming, IObjectInitializedEvent)
 def streaming_adicionado(context, event):
-    converte_video(context)
+    queueJob(context)
+    # converte_video(context)
