@@ -2,50 +2,60 @@
 import cStringIO
 import os
 from subprocess import Popen, PIPE
-
+import traceback
+from DateTime import DateTime
 from PIL import Image
-from Products.Archetypes.interfaces import IObjectEditedEvent, IObjectInitializedEvent
-from five import grok
 from hachoir_metadata.metadata import extractMetadata
 from hachoir_parser.guess import createParser
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 
 from vindula.streaming.async import queueJob
-from vindula.streaming.content.vindulastreaming import VindulaStreaming
 from vindula.streaming.controlpanel import IStreamingSettings
+from vindula.streaming.settings import Settings
 
 
 def converte_video(objeto):
 
-    video = str(objeto.getVideo())
+    settings = Settings(objeto)
+    try:
+        video = str(objeto.getVideo())
 
-    uid = objeto.UID()
+        uid = objeto.UID()
 
-    registry =  getUtility(IRegistry)
-    settings = registry.forInterface(IStreamingSettings)
+        registry =  getUtility(IRegistry)
+        global_settings = registry.forInterface(IStreamingSettings)
 
-    path = settings.path
+        path = global_settings.path
 
-    filename = path + uid + "_video"
-    arquivo = open(filename, 'w')
-    arquivo.write(video)
-    arquivo.close()
+        filename = path + uid + "_video"
+        arquivo = open(filename, 'w')
+        arquivo.write(video)
+        arquivo.close()
 
-    if objeto.getVideo().filename.endswith('.mp3'):
-        return
-    new = filename + ".flv"
-    # Caso exista algum flv, apaga porque vamos gera-lo novamente
-    if os.path.isfile(new):
-        os.unlink(new)
+        if objeto.getVideo().filename.endswith('.mp3'):
+            return
+        new = filename + ".flv"
+        # Caso exista algum flv, apaga porque vamos gera-lo novamente
+        if os.path.isfile(new):
+            os.unlink(new)
 
-    # Converte o video e seta o audio para o rate 44100
-    command = ["avconv", "-y", "-i", filename, "-ar", "44100", new]
-    result = Popen(command,stdout=PIPE, stderr=PIPE).communicate()
-#    Popen(command)
-    # apaga o arquivo
-    if os.path.isfile(new):
-        os.unlink(filename)
+        # Converte o video e seta o audio para o rate 44100
+        command = ["avconv", "-y", "-i", filename, "-ar", "44100", new]
+        result = Popen(command,stdout=PIPE, stderr=PIPE).communicate()
+    #    Popen(command)
+        # apaga o arquivo
+        if os.path.isfile(new):
+            os.unlink(filename)
+
+        settings.successfully_converted = True
+    except Exception, ex:
+        settings.successfully_converted = False
+        settings.exception_msg = getattr(ex, 'message', '')
+        settings.exception_traceback = traceback.format_exc()
+
+    settings.last_updated = DateTime().ISO8601()
+    settings.converting = False
 
     objeto.setDuracao(duracao(objeto))
     pega_imagem(objeto)
@@ -54,8 +64,8 @@ def converte_video(objeto):
 def metadata(objeto, key):
     uid = objeto.UID()
     registry =  getUtility(IRegistry)
-    settings = registry.forInterface(IStreamingSettings)
-    path = settings.path
+    global_settings = registry.forInterface(IStreamingSettings)
+    path = global_settings.path
     file = path + uid + "_video.flv"
     parser = createParser(unicode(file))
     if parser is not None:
@@ -100,9 +110,9 @@ def pega_imagem(objeto):
     uid = objeto.UID()
 
     registry =  getUtility(IRegistry)
-    settings = registry.forInterface(IStreamingSettings)
+    global_settings = registry.forInterface(IStreamingSettings)
 
-    path = settings.path
+    path = global_settings.path
 
     arquivo = path + uid + "_video.flv"
     imagem = path + uid + "_imagem.jpg"
@@ -128,14 +138,13 @@ def pega_imagem(objeto):
 
     return nova_imagem
 
+# @grok.subscribe(VindulaStreaming, IObjectEditedEvent)
+# def streaming_editado(context, event):
+#     queueJob(context)
+#     # converte_video(context)
 
-@grok.subscribe(VindulaStreaming, IObjectEditedEvent)
-def streaming_editado(context, event):
-    queueJob(context)
-    # converte_video(context)
 
-
-@grok.subscribe(VindulaStreaming, IObjectInitializedEvent)
+# @grok.subscribe(VindulaStreaming, IObjectInitializedEvent)
 def streaming_adicionado(context, event):
     queueJob(context)
     # converte_video(context)

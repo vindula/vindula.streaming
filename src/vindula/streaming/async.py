@@ -3,7 +3,7 @@ from logging import getLogger
 from zope.component import getUtility
 
 from vindula.streaming.utils import getPortal
-
+from vindula.streaming.settings import Settings
 
 try:
     from zc.async.interfaces import COMPLETED
@@ -110,10 +110,8 @@ class JobRunner(object):
 
         self.async.queueJobInQueue(self.queue, (QUOTA_NAME,), converte_video,
                                    self.object)
-        #TODO: Ver isso!
-
-        # settings = StreamingSettingsEditForm(self.object)
-        # settings.converting = True
+        settings = Settings(self.object)
+        settings.converting = True
 
     def move_to_front(self):
         """

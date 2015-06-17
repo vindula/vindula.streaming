@@ -46,4 +46,14 @@
          visible="True">
   <permission value="Modify portal content"/>
  </action>
+
+ <action title="Conversor Multimídia" 
+         action_id="media_convert"
+         category="object" 
+         condition_expr=""
+         url_expr="string:${object_url}/media-convert" 
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action> 
+ 
 </object>

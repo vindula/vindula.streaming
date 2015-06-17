@@ -33,4 +33,14 @@
       title="vindula.streaming: Add VindulaStreaming"
       />
 
+  <subscriber
+    for="vindula.streaming.content.interfaces.IVindulaStreaming
+         Products.Archetypes.interfaces.IObjectEditedEvent"
+    handler=".eventos.streaming_adicionado" />
+
+  <subscriber
+    for="vindula.streaming.content.interfaces.IVindulaStreaming
+         Products.Archetypes.interfaces.IObjectInitializedEvent"
+    handler=".eventos.streaming_adicionado" />
+
 </configure>
