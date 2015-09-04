@@ -5,6 +5,8 @@ from five import grok
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 
+from Products.CMFCore.utils import getToolByName
+
 from vindula.streaming.content.interfaces import IVindulaStreaming
 from vindula.streaming.controlpanel import IStreamingSettings
 
@@ -37,3 +39,15 @@ class StreamingView(grok.View):
         if panel:
             return panel.check_share()
 
+
+class FrameStreamingView(grok.View):
+    grok.context(IVindulaStreaming)
+    grok.name("frame-video-view")
+    grok.require("zope2.View")
+
+    def url_streaming(self):
+        portal_url = getToolByName(self.context, "portal_url")
+        portal = portal_url.getPortalObject().absolute_url()
+        url = portal + '/streaming'
+        return url
+        

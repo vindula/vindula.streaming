@@ -8,6 +8,7 @@
 <head>
     <metal:js fill-slot="javascript_head_slot">
         <script type="text/javascript" src="flowplayer-3.1.2.min.js" tal:condition='context/is_video'></script>
+        <script type="text/javascript" src="embed.js" tal:condition='context/is_video'></script>
         <script language="JavaScript" src="audio-player.js" tal:condition='context/is_music'></script>
     </metal:js>
 </head>
@@ -15,7 +16,27 @@
 
 <body>
   <metal:main fill-slot="content-core">
-
+    <style>
+    .box-input {
+      box-sizing: border-box;
+      width:100%;
+      padding: 5px 10px 6px;
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 13px;
+      box-shadow: inset 0 0 1px rgba(0,0,0,.05);
+      border: 1px solid #d3d3d3;
+      color: #333;
+      font-family: Roboto,arial,sans-serif;
+    }
+    .link-download{
+      float:left;
+      width:20%;
+    }
+    #embed {
+      margin-top:14px;
+    }
+    </style>
       <tal:cont condition="view/check_share|nothing">
             <tal:cont condition="context/activ_share|nothing">
                 <br/>
@@ -66,7 +87,7 @@
               </script>
           </div>
 
-          <div tal:condition="view/can_download|nothing">
+          <div class="link-download" tal:condition="view/can_download|nothing">
               <br />
               <img src="#" title="#" alt="#"
                    tal:attributes="src string:${context/portal_url}/vindulastreaming.png;
@@ -78,7 +99,16 @@
                   Download
               </a>
           </div>
-
+            <div id="embed">
+              <img src="#" title="#" alt="#"
+                       tal:attributes="src string:${context/portal_url}/vindulastreaming.png;"/>
+              <a class="embed" style="cursor:pointer;"> Incorporar o Vídeo </a> <br/><br/>
+                    <div class="text-embed">
+                      <span>Copie o código abaixo e cole no editor de texto</span><p/>
+                      <input class="box-input" title="Incorporar código" tal:attributes="value string: <iframe width='680' height='410' src='${caminho_contexto}/frame-video-view' frameborder='0' allowfullscreen></iframe>" />
+                        
+                    </div>
+            </div>
       </div>
   </metal:main>
 </body>
