@@ -19,7 +19,7 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         name='duracao',
         widget=atapi.StringField._properties['widget'](
             label="Tempo de Duração",
-            description="Imforme o tempo de duração desta multimídia",
+            description="Informe o tempo de duração desta multimídia",
         ),
         required=True,
     ),
@@ -28,7 +28,7 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
         name='ano',
         widget=atapi.StringField._properties['widget'](
             label="Ano da Multimídia",
-            description="Imforme o ano desta multimídia",
+            description="Informe o ano desta multimídia",
         ),
         required=False,
     ),
@@ -54,7 +54,7 @@ StreamingSchema = ATContentTypeSchema.copy() + atapi.Schema((
     atapi.ImageField(
         name='image',
         widget=atapi.ImageWidget(
-            label='Foto do Video',
+            label='Foto do Vídeo',
         ),
         sizes= {'large'   : (768, 768),
                 'preview' : (400, 400),

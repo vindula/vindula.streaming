@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-from zope.interface import Interface
-
-from zope import schema
-
 from plone.app.registry.browser import controlpanel
-
-from z3c.form.browser.textlines import TextLinesFieldWidget
+from zope import schema
+from zope.interface import Interface
 
 
 class IStreamingSettings(Interface):
@@ -30,7 +26,6 @@ class IStreamingSettings(Interface):
         required=False,
         default=True
     )
-
 
 class StreamingSettingsEditForm(controlpanel.RegistryEditForm):
 

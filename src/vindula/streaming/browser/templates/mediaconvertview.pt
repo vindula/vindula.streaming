@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<div metal:fill-slot="content-core">
+  <tal:main-macro metal:define-macro="content-core" 
+         tal:define="size python:here.getObjSize(here);
+                     content_type here/get_content_type|here/Format;">
+  <tal:notconverting tal:condition="not: view/converting">
+    <h3>Converter o arquivo multimidia</h3>
+    <p class="discreet">
+      Você tem certeza que deseja converter o arquivo multimidia?
+    </p>
+    <form method="post">
+      <span tal:replace="structure context/@@authenticator/authenticator"/>
+      <input type="submit" name="form.action.queue" value="Convert" /> 
+    </form>
+  </tal:notconverting>
+  <tal:converting tal:condition="view/converting">
+    <h3>Convertendo</h3>
+    <p class="discreet">
+      O arquivo está sendo convertido.
+    </p>
+    <p>Você pode visitar
+      <a tal:attributes="href string:${context/absolute_url}/view"o arquivo atual</a>
+      até que seja completa a conversão.
+      <tal:queue tal:condition="python: view.manager and view.async_installed">
+        <tal:pos tal:condition="python: view.position > 0">
+          O arquivo é o número <tal:pos tal:replace="view/position" /> da fila.
+        </tal:pos>
+        <tal:pos tal:condition="python: view.position == 0">
+          O arquivo está sendo convertido agora.
+        </tal:pos>
+        <!--tal:move tal:condition="python: view.position > 1 and view.manager">
+          <form method="post" tal:attributes="action string:${context/absolute_url}/@@dvmove-to-front">
+            <span tal:replace="structure context/@@authenticator/authenticator"/>
+            <input type="submit" name="form.action.move" value="Move to front of Queue" /> 
+          </form>
+        </tal:move-->
+        <br /><br />
+        Você pode visitar
+        <a tal:attributes="href string:${context/portal_url}/@@dvasync-monitor">para checar o progresso da fila.</a>.
+      </tal:queue>
+    </p>
+  </tal:converting>
+  </tal:main-macro>
+</div>
+
+</body>
+
+</html>
